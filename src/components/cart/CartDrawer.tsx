@@ -29,7 +29,7 @@ export function CartDrawer() {
       isOpen={isOpen}
       onClose={toggleCart}
       title={`Your Cart (${items.length})`}
-      className="sm:max-w-md"
+      className="sm:max-w-md z-999"
     >
       {items.length === 0 ? (
         /* Empty State */
