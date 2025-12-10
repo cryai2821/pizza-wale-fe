@@ -13,9 +13,9 @@ export function BottomNav() {
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/menu', label: 'Menu', icon: Pizza },
+    { href: '#menu', label: 'Menu', icon: Pizza },
     { href: '#cart', label: 'Cart', icon: ShoppingBag, onClick: toggleCart },
-    { href: '/profile', label: 'Profile', icon: User },
+    { href: '#profile', label: 'Profile', icon: User },
   ];
 
   return (
