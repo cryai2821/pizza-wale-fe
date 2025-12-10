@@ -21,7 +21,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="relative container h-full flex flex-col justify-center px-4 text-white">
-          <h1 className="text-4xl md:text-6xl font-bold mb-2">Pizza Wale</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-2">Auntynoz Pizza</h1>
           <p className="text-lg md:text-xl opacity-90">Delicious Pizza, Delivered Fast.</p>
         </div>
       </div>

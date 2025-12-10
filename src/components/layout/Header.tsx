@@ -25,7 +25,7 @@ export function Header() {
               <Menu className="h-6 w-6" />
             </Button>
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-emerald-600">Pizza Wale</span>
+              <span className="text-2xl font-bold text-emerald-600">Auntynoz Pizza</span>
             </Link>
           </div>
 
