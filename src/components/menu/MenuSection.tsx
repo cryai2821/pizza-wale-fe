@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Keeping use client because it uses useState and user interactions (modal, cart)
 
 import { useState } from 'react';
 import { Category, Product } from '@/types';
@@ -6,10 +6,13 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { CustomizationModal } from '@/components/product/CustomizationModal';
 import { useCartStore } from '@/lib/store/cart';
 
-import { useMenu } from '@/hooks/useMenu';
+interface MenuSectionProps {
+  initialCategories: Category[];
+  initialProducts: Product[];
+}
 
-export function MenuSection() {
-  const { data, isLoading, error } = useMenu();
+export function MenuSection({ initialCategories = [], initialProducts = [] }: MenuSectionProps) {
+  // const { data, isLoading, error } = useMenu(); // Removed
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,23 +44,11 @@ export function MenuSection() {
     setIsModalOpen(false);
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-      </div>
-    );
-  }
+  const categories = initialCategories;
+  const products = initialProducts;
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-red-500">
-        Failed to load menu. Please try again later.
-      </div>
-    );
-  }
+  // Removed Loading/Error states (handled by Page Suspense or static generation)
 
-  const { categories = [], products = [] } = data || {};
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">

@@ -42,7 +42,7 @@ export function CustomizationModal({ isOpen, onClose, product, onAddToCart }: Cu
 
   const totalPrice = useMemo(() => {
     if (!product) return 0;
-    let total = product.basePrice;
+    let total = Number(product.basePrice); // Explicit formatting to avoid string concatenation
 
     product.optionConfigs?.forEach(config => {
       const group = config.optionGroup;

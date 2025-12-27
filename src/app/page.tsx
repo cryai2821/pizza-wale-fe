@@ -1,10 +1,10 @@
-'use client';
-
 import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { MenuSection } from '@/components/menu/MenuSection';
+import { getMenuServer } from '@/lib/fetch-menu';
 
-export default function Home() {
+export default async function Home() {
+  const { categories, products } = await getMenuServer();
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       </div>
 
-      <MenuSection />
+      <MenuSection initialCategories={categories} initialProducts={products} />
 
       <BottomNav />
     </main>

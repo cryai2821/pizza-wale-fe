@@ -28,7 +28,18 @@ export function useMenu() {
           });
 
           if (Array.isArray(cat.products)) {
-            products.push(...cat.products);
+            const mappedProducts = cat.products.map((p: any) => ({
+              ...p,
+              optionConfigs: p.optionConfigs?.map((oc: any) => ({
+                ...oc,
+                optionGroup: {
+                  ...oc.optionGroup,
+                  minSelection: oc.optionGroup.minSelect ?? oc.optionGroup.minSelection,
+                  maxSelection: oc.optionGroup.maxSelect ?? oc.optionGroup.maxSelection,
+                }
+              }))
+            }));
+            products.push(...mappedProducts);
           }
         });
       }
