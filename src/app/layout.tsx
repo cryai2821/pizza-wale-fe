@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -32,7 +33,9 @@ export default async function RootLayout({
         <QueryProvider>
           {children}
           <MobileFloatingMenu categories={categories} products={products} />
-          <MobileStickyCart />
+          <Suspense fallback={null}>
+            <MobileStickyCart />
+          </Suspense>
         </QueryProvider>
       </body>
     </html>

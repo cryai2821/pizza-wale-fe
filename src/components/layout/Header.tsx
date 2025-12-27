@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { ShoppingBag, Menu, User, LogOut } from 'lucide-react';
@@ -11,7 +11,7 @@ import { useUIStore } from '@/lib/store/ui';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { AuthModal } from '@/components/auth/AuthModal';
 
-export function Header() {
+function HeaderContent() {
   const { items, toggleCart } = useCartStore();
   const { user, isAuthenticated, logout } = useAuthStore();
   const { isAuthModalOpen, openAuthModal, closeAuthModal } = useUIStore();
@@ -134,5 +134,13 @@ export function Header() {
       <CartDrawer />
       <AuthModal isOpen={isAuthModalOpen} onClose={handleModalClose} />
     </>
+  );
+}
+
+export function Header() {
+  return (
+    <Suspense fallback={<header className="sticky top-0 z-50 w-full bg-white shadow-sm h-16" />}>
+      <HeaderContent />
+    </Suspense>
   );
 }
