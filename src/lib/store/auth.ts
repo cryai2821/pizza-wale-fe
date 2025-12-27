@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('pizza-wale-auth');
         set({ token: null, user: null, isAuthenticated: false });
       },
     }),

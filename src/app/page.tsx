@@ -27,8 +27,6 @@ export default async function Home() {
       </div>
 
       <MenuSection initialCategories={categories} initialProducts={products} />
-
-      <BottomNav />
     </main>
   );
 }

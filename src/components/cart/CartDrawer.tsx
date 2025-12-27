@@ -5,31 +5,46 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { CartItem } from './CartItem';
 import { ShoppingBag } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/auth';
 import { useUIStore } from '@/lib/store/ui';
+import { useState, useEffect } from 'react';
 
 export function CartDrawer() {
   const { items, isOpen, toggleCart, getTotal } = useCartStore();
   const { isAuthenticated } = useAuthStore();
   const { openAuthModal } = useUIStore();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Prevent opening on mobile to avoid backdrop/scroll issues
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleCheckout = () => {
     toggleCart();
     if (isAuthenticated) {
       router.push('/checkout');
     } else {
-      openAuthModal();
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('auth', 'login');
+      params.set('redirect', '/checkout');
+      router.push(`${pathname}?${params.toString()}`);
     }
   };
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={isOpen && !isMobile}
       onClose={toggleCart}
       title={`Your Cart (${items.length})`}
-      className="sm:max-w-md z-999"
+      className="hidden md:block sm:max-w-md z-999"
     >
       {items.length === 0 ? (
         /* Empty State */

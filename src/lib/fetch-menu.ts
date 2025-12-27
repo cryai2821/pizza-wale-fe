@@ -18,7 +18,7 @@ export async function getMenuServer() {
   const products: Product[] = [];
 
   if (Array.isArray(data)) {
-    data.forEach((cat: any) => {
+    data.forEach((cat) => {
       categories.push({
         id: cat.id,
         name: cat.name,

@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
+import { useRouter, useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store/auth';
+import { useUIStore } from '@/lib/store/ui';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -55,7 +57,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         try {
             const { data } = await api.post('/auth/otp/verify', { phone, otp });
             login(data.access_token, data.user);
-            onClose();
             resetForm();
         } catch (err: any) {
             setError(err.response?.data?.message || 'Invalid OTP');
@@ -89,14 +90,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             onClose={handleClose}
             title={step === 'phone' ? 'Login' : 'Verify OTP'}
         >
-            <div className="space-y-4">
+            <div className="space-y-4 px-6 py-2">
                 {step === 'phone' ? (
                     <>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Phone Number
                             </label>
-                            <div className="flex gap-2">
+                            <div className="flex">
                                 <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                                     +91
                                 </span>

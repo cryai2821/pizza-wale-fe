@@ -49,7 +49,6 @@ export function MenuSection({ initialCategories = [], initialProducts = [] }: Me
 
   // Removed Loading/Error states (handled by Page Suspense or static generation)
 
-
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="container px-4 py-6 space-y-8">

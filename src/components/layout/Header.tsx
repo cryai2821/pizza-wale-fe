@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { ShoppingBag, Menu, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/lib/store/cart';
@@ -13,6 +15,45 @@ export function Header() {
   const { items, toggleCart } = useCartStore();
   const { user, isAuthenticated, logout } = useAuthStore();
   const { isAuthModalOpen, openAuthModal, closeAuthModal } = useUIStore();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get('auth') === 'login') {
+      if (isAuthenticated) {
+        // Handle redirection or cleanup upon authentication
+        const redirect = searchParams.get('redirect');
+
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          // If no redirect, just clean up params
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete('auth');
+          params.delete('redirect');
+          router.replace(`${pathname}?${params.toString()}`);
+        }
+
+        // Ensure modal is closed in both cases
+        if (isAuthModalOpen) {
+          closeAuthModal();
+        }
+      } else {
+        if (!isAuthModalOpen) openAuthModal();
+      }
+    }
+  }, [searchParams, isAuthModalOpen, openAuthModal, closeAuthModal, isAuthenticated, router, pathname]);
+
+  const handleModalClose = () => {
+    closeAuthModal();
+    if (searchParams.get('auth') === 'login') {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('auth');
+      params.delete('redirect');
+      router.push(`${pathname}?${params.toString()}`);
+    }
+  };
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -35,7 +76,7 @@ export function Header() {
               <Link href="/orders" className="transition-colors hover:text-emerald-600">My Orders</Link>
             </nav>
 
-            <Button variant="ghost" size="icon" className="relative" onClick={toggleCart}>
+            <Button variant="ghost" size="icon" className="relative hidden md:inline-flex" onClick={toggleCart}>
               <ShoppingBag className="h-6 w-6" />
               {itemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">
@@ -44,6 +85,7 @@ export function Header() {
               )}
             </Button>
 
+            {/* Desktop Auth */}
             {isAuthenticated ? (
               <div className="hidden md:flex items-center gap-2">
                 <Button variant="ghost" size="sm" className="gap-2">
@@ -67,11 +109,30 @@ export function Header() {
                 Login
               </Button>
             )}
+
+            {/* Mobile Auth */}
+            <div className="md:hidden flex items-center">
+              {isAuthenticated ? (
+                <Link href="/profile">
+                  <Button variant="ghost" size="icon">
+                    <User className="h-6 w-6" />
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="text-base font-semibold text-gray-700 hover:text-emerald-600 px-2"
+                  onClick={openAuthModal}
+                >
+                  Login
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </header>
       <CartDrawer />
-      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={handleModalClose} />
     </>
   );
 }
