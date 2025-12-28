@@ -6,12 +6,12 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useCreateOrder } from '@/hooks/useOrders';
 import { Button } from '@/components/ui/Button';
 import { Header } from '@/components/layout/Header';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Trash2, Minus, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
     const router = useRouter();
-    const { items, getTotal, clearCart } = useCartStore();
+    const { items, getTotal, clearCart, removeItem, updateQuantity } = useCartStore();
     const { isAuthenticated, user } = useAuthStore();
     const { mutate: createOrder, isPending } = useCreateOrder();
 
@@ -75,7 +75,7 @@ export default function CheckoutPage() {
         <div className="min-h-screen bg-gray-50">
             <Header />
 
-            <main className="container px-4 py-8 max-w-2xl mx-auto">
+            <main className="container px-4 py-8 max-w-2xl mx-auto pb-32">
                 <div className="flex items-center gap-4 mb-6">
                     <Link href="/">
                         <Button variant="ghost" size="icon">
@@ -92,16 +92,44 @@ export default function CheckoutPage() {
 
                     <div className="divide-y divide-gray-100">
                         {items.map((item, idx) => (
-                            <div key={`${item.productId}-${idx}`} className="p-4 flex gap-4">
-                                <div className="flex-1">
-                                    <div className="flex justify-between mb-1">
-                                        <h3 className="font-medium text-gray-900">{item.product?.name || item.name}</h3>
-                                        <span className="font-medium">₹{item.price * item.quantity}</span>
+                            <div key={`${item.productId}-${idx}`} className="p-4 flex justify-between items-start">
+                                <div className="flex-1 pr-4">
+                                    <div className="flex items-start gap-2">
+                                        {/* Veg/Non-veg icon placeholder - would go here */}
+                                        <div>
+                                            <h3 className="font-medium text-gray-900">{item.product?.name || item.name}</h3>
+                                            <p className="text-sm text-gray-500 mt-0.5">
+                                                {item.selectedOptions && item.selectedOptions.length > 0
+                                                    ? item.selectedOptions.map(opt => opt.name).join(', ')
+                                                    : 'Regular'}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Qty: {item.quantity} × ₹{item.price}
-                                    </p>
-                                    {/* Display selected options if any */}
+                                </div>
+
+                                <div className="flex flex-col items-end gap-2">
+                                    <div className="flex items-center rounded-lg border border-gray-200 h-8">
+                                        <button
+                                            onClick={() => {
+                                                if (item.quantity > 1) {
+                                                    updateQuantity(item.productId, item.selectedOptions, item.quantity - 1);
+                                                } else {
+                                                    removeItem(item.productId, item.selectedOptions);
+                                                }
+                                            }}
+                                            className="w-8 h-full flex items-center justify-center hover:bg-gray-50 text-gray-500 transition-colors rounded-l-lg"
+                                        >
+                                            <Minus className="h-3.5 w-3.5" />
+                                        </button>
+                                        <span className="w-6 text-center text-sm font-medium text-gray-900">{item.quantity}</span>
+                                        <button
+                                            onClick={() => updateQuantity(item.productId, item.selectedOptions, item.quantity + 1)}
+                                            className="w-8 h-full flex items-center justify-center hover:bg-gray-50 text-emerald-600 transition-colors rounded-r-lg"
+                                        >
+                                            <Plus className="h-3.5 w-3.5" />
+                                        </button>
+                                    </div>
+                                    <span className="font-medium text-gray-900">₹{item.price * item.quantity}</span>
                                 </div>
                             </div>
                         ))}
@@ -128,20 +156,27 @@ export default function CheckoutPage() {
                     <p className="text-gray-600">{user?.phone}</p>
                 </div>
 
-                <Button
-                    className="w-full h-12 text-lg"
-                    onClick={handlePlaceOrder}
-                    disabled={isPending}
-                >
-                    {isPending ? (
-                        <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Placing Order...
-                        </>
-                    ) : (
-                        `Place Order • ₹${total}`
-                    )}
-                </Button>
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40">
+                    <div className="max-w-2xl mx-auto">
+                        <Button
+                            className="w-full h-14 text-lg font-semibold shadow-lg shadow-emerald-500/20"
+                            onClick={handlePlaceOrder}
+                            disabled={isPending}
+                        >
+                            {isPending ? (
+                                <>
+                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                    Placing Order...
+                                </>
+                            ) : (
+                                <div className="flex items-center justify-between w-full px-2">
+                                    <span>Place Order</span>
+                                    <span>₹{total}</span>
+                                </div>
+                            )}
+                        </Button>
+                    </div>
+                </div>
             </main>
         </div>
     );

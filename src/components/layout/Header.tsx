@@ -61,14 +61,9 @@ function HeaderContent() {
     <>
       <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
         <div className="container flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-6 w-6" />
-            </Button>
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-emerald-600">Auntynoz Pizza</span>
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-emerald-600">Auntynoz Pizza</span>
+          </Link>
 
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">

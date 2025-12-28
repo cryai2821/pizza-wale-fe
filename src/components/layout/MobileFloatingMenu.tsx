@@ -18,7 +18,7 @@ export function MobileFloatingMenu({ categories, products }: MobileFloatingMenuP
     const hasCartItems = items.length > 0;
 
     // Position: Lower (bottom-6) if no cart, Higher (bottom-24) if cart exists
-    const positionClass = hasCartItems ? 'bottom-20' : 'bottom-6';
+    const positionClass = hasCartItems ? 'bottom-22' : 'bottom-6';
 
     useEffect(() => {
         if (isOpen) {
@@ -78,8 +78,8 @@ export function MobileFloatingMenu({ categories, products }: MobileFloatingMenuP
             ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}
           `}
                 >
-                    <div className="flex items-center justify-between px-4 py-3 bg-emerald-50 border-b border-emerald-100">
-                        <span className="font-semibold text-emerald-900">Menu</span>
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-emerald-100">
+                        <span className="font-semibold text-emerald-600">Menu</span>
                         <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-emerald-100 rounded-full text-emerald-700 transition-colors">
                             <X className="h-4 w-4" />
                         </button>

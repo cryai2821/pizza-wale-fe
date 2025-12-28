@@ -51,7 +51,7 @@ export function MenuSection({ initialCategories = [], initialProducts = [] }: Me
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="container px-4 py-6 space-y-8">
+      <div className="container px-4 py-6 space-y-5">
         {categories.map((category) => {
           const categoryProducts = products.filter(p => p.categoryId === category.id);
 
@@ -59,8 +59,8 @@ export function MenuSection({ initialCategories = [], initialProducts = [] }: Me
 
           return (
             <div key={category.id} id={category.slug} className="scroll-mt-20">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">{category.name}</h2>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <h2 className="text-xl text-center font-bold text-gray-900 mb-5">{category.name}</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {categoryProducts.map((product) => (
                   <ProductCard
                     key={product.id}
